@@ -2,6 +2,7 @@ package controllers
 
 import javax.xml.ws.WebServiceClient
 
+import com.kenshoo.play.metrics.MetricsController
 import com.sksamuel.elastic4s._
 import client.{RecipeHttpClient, LocalElasticSearchClientFactory}
 import com.sksamuel.elastic4s.ElasticDsl._
