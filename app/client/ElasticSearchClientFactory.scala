@@ -11,6 +11,8 @@ import play.api.Configuration
 trait ElasticSearchClientFactory {
 
   val client: ElasticClient
+
+  val settings: ImmutableSettings
 }
 
 

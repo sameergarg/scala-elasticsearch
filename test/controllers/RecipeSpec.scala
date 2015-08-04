@@ -1,6 +1,6 @@
 package controllers
 
-import client.RecipeHttpClient
+import client.RecipeElasticSearchHttpWSClient
 import models.Recipe
 import org.scalatest.{FlatSpec, Matchers}
 /**
@@ -10,7 +10,7 @@ class RecipeSpec extends FlatSpec with Matchers {
 
   "Recipe" should "parse json" in new RecipeController {
 
-    override def httpClient: RecipeHttpClient = ???
+    override def httpClient: RecipeElasticSearchHttpWSClient = ???
 
     val json = """{
                     "name":"Hot Roast Beef Sandwiches",

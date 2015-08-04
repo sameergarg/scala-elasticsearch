@@ -9,12 +9,22 @@ import play.api.libs.ws.{WSResponse, WSClient}
 
 import scala.concurrent.Future
 
-/**
- *
- */
-trait WebServiceClient {
+trait ResourceClient {
+  
+  type T
+
+  type R
+
+  def save(resource: T): Future[R]
+
+  def search(term: String):Future[R]
+}
+
+trait HttpWSClient extends ResourceClient {
 
   type T
+  
+  type R = WSResponse
 
   def wsClient: WSClient
 
@@ -26,7 +36,7 @@ trait WebServiceClient {
 
   def parseToJson(resource: T): JsValue
 
-  def save(resource: T): Future[WSResponse] = {
+  def save(resource: T): Future[R] = {
     val url: String = s"http://$host:$port/$path"
     Logger.debug(s"connecting to http client at $url")
     wsClient.url(url)
@@ -34,7 +44,7 @@ trait WebServiceClient {
       .post(parseToJson(resource))
   }
 
-  def search(term: String):Future[WSResponse] = {
+  def search(term: String):Future[R] = {
     wsClient.url(s"http://$host:$port/$path/_search?pretty=true")
       .withHeaders("Content-Type" -> "application/json")
       .post(
@@ -50,7 +60,7 @@ trait WebServiceClient {
   }
 }
 
-trait ElasticSearchWebServiceClient extends WebServiceClient {
+trait ElasticSearchHttpWSClient extends HttpWSClient {
 
   val config = new Configuration(ConfigFactory.load())
 
@@ -60,7 +70,7 @@ trait ElasticSearchWebServiceClient extends WebServiceClient {
 
 }
 
-class RecipeHttpClient @Inject()(ws: WSClient) extends ElasticSearchWebServiceClient {
+class RecipeElasticSearchHttpWSClient @Inject()(ws: WSClient) extends ElasticSearchHttpWSClient {
 
   type T = Recipe
 

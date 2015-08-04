@@ -3,7 +3,7 @@ package controllers
 import javax.xml.ws.WebServiceClient
 
 import com.sksamuel.elastic4s._
-import client.{RecipeHttpClient, LocalElasticSearchClientFactory}
+import client.{RecipeElasticSearchHttpWSClient, LocalElasticSearchClientFactory}
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.source.Indexable
 import fileutils.Unzip
@@ -20,18 +20,10 @@ import com.sksamuel.elastic4s.Executable
 
 import scala.util.{Failure, Success}
 import scala.concurrent.ExecutionContext.Implicits.global
-/**
- *
- */
-
-
-
-
-
 
 trait RecipeController extends Controller with Unzip {
 
-  def httpClient: RecipeHttpClient
+  def httpClient: RecipeElasticSearchHttpWSClient
 
   implicit object RecipeIndexable extends Indexable[Recipe] {
     override def json(recipe: Recipe): String = Json.toJson(recipe).toString()
@@ -85,6 +77,6 @@ trait RecipeController extends Controller with Unzip {
 
 class DefaultRecipeController @Inject() (ws: WSClient) extends RecipeController {
 
-  def httpClient = new RecipeHttpClient(ws)
+  def httpClient = new RecipeElasticSearchHttpWSClient(ws)
 
 }
